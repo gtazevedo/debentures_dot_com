@@ -1,0 +1,26 @@
+[project]
+name = "debentures_dot_com"
+version = "0.0.1"
+authors = [
+  { name="Guilherme Azevedo", email="tolotti.azevedo@gmail.com" },
+]
+description = "A simple package to consult debentures.com.br"
+readme = "README.md"
+requires-python = ">=3.12"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
+dependencies = [
+  "requests",
+  "beautifulsoup4>=4.13.4",
+  "pandas>=2.3.1",
+  "lxml>=6.0.0",
+  "html5lib>=1.1"
+]
+
+[project.urls]
+Homepage = "https://github.com/gtazevedo/debentures_dot_com"
+Issues = "https://github.com/gtazevedo/debentures_dot_com/issues"
