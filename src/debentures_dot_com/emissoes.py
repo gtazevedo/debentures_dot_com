@@ -4,7 +4,7 @@ import pandas as pd
 from bs4 import BeautifulSoup
 from dateutil import parser
 from datetime import date
-from utils.utils import get_response_to_pd
+from utils.utils import get_response_to_pd, _format_cnpj, _format_date_for_url
 
 class EmissoesDebentures:
     def __init__(self, root_url:str)->str:
@@ -41,9 +41,9 @@ class EmissoesDebentures:
         df.columns = ['Descricao', 'Valores']
         return df
     
-    def _dt_fim_ini_fix(self, date_):
-        dt_par = parser.parse(date_)
-        return f'{dt_par.day:02d}%2F{dt_par.month:02d}%2F{dt_par.year}'
+    #def _dt_fim_ini_fix(self, date_):
+    #    dt_par = parser.parse(date_)
+    #    return f'{dt_par.day:02d}%2F{dt_par.month:02d}%2F{dt_par.year}'
     
     def pu_historico(self, ativo:str, dt_inicio:str=None, dt_fim:str=None)->pd.DataFrame:
         params = []
@@ -55,9 +55,9 @@ class EmissoesDebentures:
             dt_fim = date.today().strftime('%Y%m%d')
 
         
-        dt_inicio_fmt = self._dt_fim_ini_fix(dt_inicio)
+        dt_inicio_fmt = _format_date_for_url(dt_inicio)
         params.append(f'dt_ini={dt_inicio_fmt}')
-        dt_fim_fmt = self._dt_fim_ini_fix(dt_fim)
+        dt_fim_fmt = _format_date_for_url(dt_fim)
         params.append(f'dt_fim={dt_fim_fmt}')
         
         # Add conditional suffix if any date filters exist
@@ -70,10 +70,10 @@ class EmissoesDebentures:
     
     def prazo_medio(self, ativo:str = None, emissor:str = None, datacvm:str = None, dt_ini:str=None, dt_fim:str=None, anoini:str=None, anofim:str=None, repactuacao:str = None, exec:str = None)->list:
         ativo = ativo if isinstance(ativo, str) else ''
-        emissor = emissor if isinstance(emissor, str) else ''
+        emissor = _format_cnpj(emissor) if emissor else ''
         datacvm = datacvm if isinstance(datacvm, str) else 'e'
-        dt_ini = dt_ini if isinstance(dt_ini, str) else ''
-        dt_fim = dt_fim if isinstance(dt_fim, str) else ''
+        dt_ini = _format_date_for_url(dt_ini)
+        dt_fim = _format_date_for_url(dt_fim)
         repactuacao = repactuacao if isinstance(repactuacao, str) else ''
         exec = exec if isinstance(exec, str) else 'Nada'
         if isinstance(anoini, int):
@@ -102,8 +102,8 @@ class EmissoesDebentures:
 
     def conversao_permuta(self, ativo:str=None, exec:bool=None, dt_ini:str=None, dt_fim:str=None, classe:str=None)->pd.DataFrame:
         ativo = ativo if isinstance(ativo, str) else ''
-        dt_ini = dt_ini if isinstance(dt_ini, str) else ''
-        dt_fim = dt_fim if isinstance(dt_fim, str) else ''
+        dt_ini = _format_date_for_url(dt_ini)
+        dt_fim = _format_date_for_url(dt_fim)
         classe = classe if isinstance(classe, str) else ''
         exec = exec if isinstance(exec, bool) else False
         url = (
