@@ -1,13 +1,9 @@
-import requests
-import io
-import pandas as pd
-from bs4 import BeautifulSoup
-from dateutil import parser
-from datetime import date
 from utils.utils import get_response_to_pd, _format_cnpj, _format_date_for_url
+from __consulta_dados import UrlDebentures
 
 class EventosFinanceiros:
-    def __init__(self, root_url:str)->str:
+    def __init__(self)->str:
+        root_url = UrlDebentures().root_url
         self.root_url = f'{root_url}/eventosfinanceiros'
 
     def agenda_eventos(self, ativo:str = None, emissor:str = None, evento:str = None, dt_ini:str=None, dt_fim:str=None, dt_pgto_ini:str=None, dt_pgto_fim:str=None)->list:
