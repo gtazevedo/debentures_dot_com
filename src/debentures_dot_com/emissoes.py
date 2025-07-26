@@ -11,9 +11,10 @@ class EmissoesDebentures:
         root_url = UrlDebentures().root_url
         self.root_url = f'{root_url}/emissoesdedebentures'
 
-    def lista_deb_publicas(self)->pd.DataFrame:
+    def lista_deb_publicas(self,timeout:int=None)->pd.DataFrame:
         url = f'{self.root_url}/caracteristicas_r.asp?tip_deb=publicas&op_exc='
-        r = requests.get(url)
+        timeout = timeout if isinstance(timeout,int) else 10
+        r = requests.get(url,timeout=timeout)
         soup = BeautifulSoup(r.text)
         table = soup.find('table', class_='Tab10333333')
         # Check if the table exists
@@ -33,9 +34,10 @@ class EmissoesDebentures:
             print("Table with class 'Tab10333333' not found.")
         return df
     
-    def lista_caracteristicas(self, ativo:str)->pd.DataFrame:
+    def lista_caracteristicas(self, ativo:str,timeout:int=None)->pd.DataFrame:
         url = f'{self.root_url}/caracteristicas_e.asp?Ativo={ativo}'
-        r = requests.get(url)
+        timeout = timeout if isinstance(timeout,int) else 10
+        r = requests.get(url,timeout=timeout)
         df = pd.read_csv(io.StringIO(r.text), sep='|', encoding='utf-8', names=['raw'], skiprows=2)
         df = df[1:]['raw'].str.split('\t', expand=True).reset_index(drop=True)
         df = df.T.reset_index(drop=True)
@@ -46,7 +48,7 @@ class EmissoesDebentures:
     #    dt_par = parser.parse(date_)
     #    return f'{dt_par.day:02d}%2F{dt_par.month:02d}%2F{dt_par.year}'
     
-    def pu_historico(self, ativo:str, dt_inicio:str=None, dt_fim:str=None)->pd.DataFrame:
+    def pu_historico(self, ativo:str, dt_inicio:str=None, dt_fim:str=None,timeout:int=None)->pd.DataFrame:
         params = []
         
         if not dt_inicio:
@@ -54,7 +56,6 @@ class EmissoesDebentures:
         
         if not dt_fim:
             dt_fim = date.today().strftime('%Y%m%d')
-
         
         dt_inicio_fmt = _format_date_for_url(dt_inicio)
         params.append(f'dt_ini={dt_inicio_fmt}')
@@ -67,9 +68,9 @@ class EmissoesDebentures:
         query_string = '&' + '&'.join(params) if params else ''
         url = f'{self.root_url}/puhistorico_e.asp?op_exc=False&ativo={ativo}{add_suffix}{query_string}'
         
-        return get_response_to_pd(url)
+        return get_response_to_pd(url,timeout=timeout)
     
-    def prazo_medio(self, ativo:str = None, emissor:str = None, datacvm:str = None, dt_ini:str=None, dt_fim:str=None, anoini:str=None, anofim:str=None, repactuacao:str = None, exec:str = None)->list:
+    def prazo_medio(self, ativo:str = None, emissor:str = None, datacvm:str = None, dt_ini:str=None, dt_fim:str=None, anoini:str=None, anofim:str=None, repactuacao:str = None, exec:str = None,timeout:int=None)->list:
         ativo = ativo if isinstance(ativo, str) else ''
         emissor = _format_cnpj(emissor) if emissor else ''
         datacvm = datacvm if isinstance(datacvm, str) else 'e'
@@ -91,7 +92,7 @@ class EmissoesDebentures:
             f'Ativo={ativo}&Emissor={emissor}&dataCVM={datacvm}&dt_ini={dt_ini}'
             f'&dt_fim={dt_fim}&anoini={anoini}&anofim={anofim}&ComRepactuacao={repactuacao}&Op_exc={exec}'
         )
-        df = get_response_to_pd(url)
+        df = get_response_to_pd(url,timeout)
         df_medio = df[:2]
         df_medio = df_medio.iloc[:, :3]
         df_medio.columns = ['', 'Tipo Prazo', 'Prazo Medio']
@@ -101,7 +102,7 @@ class EmissoesDebentures:
         df_data = df_data[1:].reset_index(drop=True)[:-2]
         return df_medio, df_data
 
-    def conversao_permuta(self, ativo:str=None, exec:bool=None, dt_ini:str=None, dt_fim:str=None, classe:str=None)->pd.DataFrame:
+    def conversao_permuta(self, ativo:str=None, exec:bool=None, dt_ini:str=None, dt_fim:str=None, classe:str=None,timeout:int=None)->pd.DataFrame:
         ativo = ativo if isinstance(ativo, str) else ''
         dt_ini = _format_date_for_url(dt_ini)
         dt_fim = _format_date_for_url(dt_fim)
@@ -111,7 +112,7 @@ class EmissoesDebentures:
             f'{self.root_url}/conversoes-permutas_e.asp?'
             f'ativo={ativo},%20&op_exc={exec}&dt_ini={dt_ini}&dt_fim={dt_fim}&classe={classe}'
         )
-        return get_response_to_pd(url)
+        return get_response_to_pd(url,timeout=timeout)
     
     def caracteristicas_debs(self, tipo:str=None,exec:bool=None,mnome:str=None,ativo:str=None,
                              ipo:str=None,icvm:str=None,escri_padro:str=None,cvm_ini:str=None,cvm_fim:str=None,
