@@ -1,4 +1,4 @@
-from utils.utils import get_response_to_pd, _format_cnpj, _format_date_for_url
+from .utils.utils import get_response_to_pd, _format_cnpj, _format_date_for_url
 from __consulta_dados import UrlDebentures
 
 class EventosFinanceiros:

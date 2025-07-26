@@ -2,7 +2,7 @@ import re
 import pandas as pd
 import requests
 from dateutil import parser
-from utils.utils import get_response_to_pd, _format_cnpj, _format_date_for_url,simple_response_to_pd,get_soup_response_to_pd
+from .utils.utils import get_response_to_pd, _format_cnpj, _format_date_for_url,simple_response_to_pd,get_soup_response_to_pd
 from __consulta_dados import UrlDebentures
 
 def parse_estoque_data(data_string: str, tipo: str) -> pd.DataFrame:

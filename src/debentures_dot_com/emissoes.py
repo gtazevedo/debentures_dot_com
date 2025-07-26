@@ -3,8 +3,8 @@ import io
 import pandas as pd
 from bs4 import BeautifulSoup
 from datetime import date
-from utils.utils import get_response_to_pd, _format_cnpj, _format_date_for_url
-from __consulta_dados import UrlDebentures
+from .utils.utils import get_response_to_pd, _format_cnpj, _format_date_for_url
+from _consulta_dados import UrlDebentures
 
 class EmissoesDebentures:
     def __init__(self)->str:
