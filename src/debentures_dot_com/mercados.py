@@ -3,7 +3,7 @@ import io
 from dateutil import parser
 import pandas as pd
 from .utils.utils import get_response_to_pd, _format_cnpj, _format_date_for_url,simple_response_to_pd,get_soup_response_to_pd
-from __consulta_dados import UrlDebentures
+from .__consulta_dados import UrlDebentures
 
 class MercadoSecundario:
     def __init__(self)->str:
