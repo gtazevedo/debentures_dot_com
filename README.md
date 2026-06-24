@@ -1,11 +1,31 @@
 # debentures_dot_com
 
-API for querying data from https://www.debentures.com.br/.
+API para consultar dados do site [debentures.com.br](https://www.debentures.com.br/).
 
-This API is currently in its initial version; therefore, some functions are still incomplete and not all data can be queried yet.
+Esta API está atualmente em sua versão inicial; portanto, algumas funções ainda estão incompletas e nem todos os dados podem ser consultados no momento.
 
-Currently, I have added queries for the following data available at https://www.debentures.com.br/exploreosnd/consultaadados:
-- Emissões Debêntures (accessible through the `EmissoesDebentures` class)
-- Estoques Corporativos (accessible through the `EstoquesCorporativos` class)
-- Eventos Financeiros (accessible through the `EventosFinanceiros` class)
-- Mercado Secundário (accessible through the `MercadoSecundario` class)
+Atualmente, foram adicionadas consultas para os seguintes dados disponíveis na seção [Consulta a Dados](https://www.debentures.com.br/exploreosnd/consultaadados):
+
+- **Emissões Debêntures** (acessível através da classe `EmissoesDebentures`)
+- **Estoques Corporativos** (acessível através da classe `EstoquesCorporativos`)
+- **Eventos Financeiros** (acessível através da classe `EventosFinanceiros`)
+- **Mercado Secundário** (acessível através da classe `MercadoSecundario`)
+
+## Instalação
+O pacote pode ser instalado via pip (exemplo):
+```bash
+pip install debentures-dot-com
+```
+
+## Como Usar
+Um exemplo rápido de como consultar emissões de debêntures públicas:
+
+```python
+from debentures_dot_com import EmissoesDebentures
+
+ed = EmissoesDebentures()
+df = ed.lista_deb_publicas()
+print(df.head())
+```
+
+Para mais detalhes e testes de desenvolvimento, você pode verificar o arquivo `tests/dev.ipynb`.

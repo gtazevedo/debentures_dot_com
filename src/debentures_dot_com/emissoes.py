@@ -15,7 +15,7 @@ class EmissoesDebentures:
         url = f'{self.root_url}/caracteristicas_r.asp?tip_deb=publicas&op_exc='
         timeout = timeout if isinstance(timeout,int) else 10
         r = requests.get(url,timeout=timeout)
-        soup = BeautifulSoup(r.text)
+        soup = BeautifulSoup(r.text, 'html.parser')
         table = soup.find('table', class_='Tab10333333')
         # Check if the table exists
         if table:
